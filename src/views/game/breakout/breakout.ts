@@ -27,17 +27,18 @@ export default class Breakout extends Scene {
 
   create() {
     this.player = this.physics.add.sprite(400, 600, 'paddle')
-    this.player.setCollideWorldBounds(true)
-    this.player.setImmovable(true)
+    this.player.setCollideWorldBounds(true) // 设置边界检测
+    this.player.setImmovable(true) // 设置碰撞后速度不衰减
     this.ball = this.physics.add.sprite(400, 565, 'ball')
     this.ball.setCollideWorldBounds(true)
-    this.ball.setBounce(1, 1)
-    this.physics.world.checkCollision.down = false
+    // 弹跳是物体与另一个物体碰撞时的恢复或弹性。值为1表示反弹后它将保持其全速。值为0表示它根本不会反弹。
+    this.ball.setBounce(1, 1) //设置x,y方向上的反弹值0-1
+    this.physics.world.checkCollision.down = false // 取消物理世界底部边界检测
 
     this.violetBricks = this.physics.add.group({
       key: 'brick1',
       repeat: 9,
-      immovable: true,
+      immovable: true, // 设置碰撞后速度不衰减
       setXY: {
         x: 80,
         y: 140,
@@ -47,7 +48,7 @@ export default class Breakout extends Scene {
     this.yellowBricks = this.physics.add.group({
       key: 'brick2',
       repeat: 9,
-      immovable: true,
+      immovable: true, // 设置碰撞后速度不衰减
       setXY: {
         x: 80,
         y: 90,
@@ -57,7 +58,7 @@ export default class Breakout extends Scene {
     this.redBricks = this.physics.add.group({
       key: 'brick3',
       repeat: 9,
-      immovable: true,
+      immovable: true, // 设置碰撞后速度不衰减
       setXY: {
         x: 80,
         y: 40,
@@ -83,6 +84,8 @@ export default class Breakout extends Scene {
     this.playerWonText.setVisible(false)
 
     this.cursors = this.input.keyboard?.createCursorKeys()
+
+    // 设置需要检测的碰撞的物体
     this.physics.add.collider(this.ball, this.violetBricks, this.hitBrick, () => {}, this)
     this.physics.add.collider(this.ball, this.yellowBricks, this.hitBrick, () => {}, this)
     this.physics.add.collider(this.ball, this.redBricks, this.hitBrick, () => {}, this)
@@ -101,13 +104,15 @@ export default class Breakout extends Scene {
     } else {
       // 游戏进行中
       if (!this.gameStarted) {
+        // 未开始时让小球保持跟随挡板
         this.ball.setX(this.player.x)
+        if (this.cursors?.space.isDown) {
+          this.gameStarted = true
+          this.openingText.setVisible(false)
+          this.ball.setVelocityY(-200)
+        }
       }
-      if (this.cursors?.space.isDown) {
-        this.gameStarted = true
-        this.openingText.setVisible(false)
-        this.ball.setVelocityY(-200)
-      }
+
       this.player.setVelocityX(0)
       if (this.cursors?.left.isDown) {
         this.player.setVelocityX(-300)
