@@ -11,7 +11,8 @@ onMounted(() => {
     physics: {
       default: 'arcade',
       arcade: {
-        debug: true
+        debug: true,
+        gravity: { y: 0 }
       }
     },
     scale: {
@@ -28,7 +29,7 @@ onMounted(() => {
 <template>
   <div id="game"></div>
 </template>
-<style>
+<style scoped>
 #game {
   margin: 10px auto;
   padding: 0;
